@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Models\Branch;
+use Psy\Readline\Hoa\Console;
 
 class RegisteredUserController extends Controller
 {
@@ -20,7 +22,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $roles = ['Repartidor', 'Empleado', 'Administrador'];
+        $branches = Branch::select('id', 'name')->get();
+        return view('auth.register', ['roles' => $roles , 'branches' => $branches]);
     }
 
     /**
@@ -36,10 +40,13 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'branch_id' => $request->branch_id,
         ]);
 
         event(new Registered($user));

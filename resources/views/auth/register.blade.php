@@ -39,13 +39,37 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- User rol-->
+        <div class="mt-4">
+            <x-input-label for="role" :value="__('Rol')" />
+            
+            <select name="role" id="role" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
+                @foreach($roles as $role)
+                    <option value="{{ $role }}" {{ old('role') == $role ? 'selected' : '' }}>{{ $role }}</option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+
+        <!-- User branch -->
+        <div class="mt-4">
+            <x-input-label for="branch_id" :value="__('Sucursal')" />
+            
+            <select name="branch_id" id="branch_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
+                @foreach($branches as $branch)
+                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('branch_id')" class="mt-2" />
+        </div>
+
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+                {{ __('Ya esta registrado?') }}
             </a>
 
             <x-primary-button class="ml-4">
-                {{ __('Register') }}
+                {{ __('Registrarse') }}
             </x-primary-button>
         </div>
     </form>
