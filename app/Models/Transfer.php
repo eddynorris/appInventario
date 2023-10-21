@@ -11,16 +11,21 @@ class Transfer extends Model
 
     protected $fillable = [
         'transaction_type',
-        'from_id',
-        'to_branch_id',
+        'supplier_id',
+        'branch_id',
         'product_id',
         'quantity',
         'user_id',
     ];
 
-    public function toBranch()
+    public function branch()
     {
-        return $this->belongsTo(Branch::class, 'to_branch_id');
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function product()

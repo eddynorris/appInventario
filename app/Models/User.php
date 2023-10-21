@@ -45,6 +45,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
     public function sales()
     {
         return $this->hasMany(Sale::class);

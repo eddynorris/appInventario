@@ -18,14 +18,19 @@ class Branch extends Model
         'address',
     ];
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
     public function sales()
     {
         return $this->hasMany(Sale::class);
     }
 
-    public function transfersTo()
+    public function transfers()
     {
-        return $this->hasMany(Transfer::class, 'to_branch_id');
+        return $this->hasMany(Transfer::class);
     }
 
     public function inventory()

@@ -17,8 +17,12 @@ class Supplier extends Model
         'email',
     ];
 
-    public function transfersFrom()
+    public function transfers()
     {
-        return $this->hasMany(Transfer::class, 'from_id');
+        return $this->hasMany(Transfer::class);
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

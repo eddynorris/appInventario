@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('province');
             $table->string('city');
             $table->text('address');
-            $table->boolean('is_factory')->default(false);
+            //$table->boolean('is_factory')->default(false);
             $table->timestamps();
         });
     }

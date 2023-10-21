@@ -17,6 +17,11 @@ class Product extends Model
         'price',
     ];
 
+    public function suppliers()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
     public function salesDetails()
     {
         return $this->hasMany(SaleDetail::class);
