@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             //$table->unsignedBigInteger('branch_id');
             //$table->unsignedBigInteger('user_id'); // empleado que realizó la venta
-            $table->foreignId('branch_id')->constrained();
+            //$table->foreignId('branch_id')->constrained();
             $table->foreignId('user_id')->constrained();
             
             $table->string('document')->nullable();
             $table->string('client')->nullable();
             $table->text('address')->nullable();
             $table->decimal('total_amount', 10, 2)->default(0);
+            $table->decimal('total_weight', 10, 2)->default(0);
+            $table->integer('duration');
             $table->timestamps();
             
 

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
+use App\Models\Product;
 use App\Models\Transfer;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -11,7 +14,11 @@ class TransferController extends Controller
 {
     public function index()
     {
-        $transfers = Transfer::with(['supplier','product', 'user', 'branch'])->get();
+        //$transfers = Transfer::with(['supplier','product', 'user', 'branch'])
+        //->whereHas('branch', function ($query) {
+        //    $query->where('is_factory', 1);
+        //})->get();
+        $transfers = Transfer::orderBy('created_at', 'desc')->get();
         return view('transfers.index')->with('transfers', $transfers);
     }
 
@@ -20,7 +27,19 @@ class TransferController extends Controller
      */
     public function create()
     {
-        return view('transfers.create');
+        
+        $branches = Branch::select('id','name','type')->get();
+
+        $branchesFactory = $branches->where('type', 'factory');
+        $branchesOffice = $branches->where('type', 'office');
+        $branchesSupplier = $branches->where('type', 'supplier');
+
+        $products = Product::select('id', 'name')->get();
+        $users = User::select('id', 'name')->get();
+
+        return view('transfers.create',['branchesOffice' => $branchesOffice ,'branchesSupplier' => $branchesSupplier ,'branchesFactory' => $branchesFactory ,'products' => $products,'users' => $users]);
+  
+    
     }
 
     /**
@@ -28,17 +47,17 @@ class TransferController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
+        $validated= $request->validate([
+            'transaction_type'   => 'required',
+            'from_id'   => 'required',
+            'branch_id' => 'required',
+            'product_id'   => 'required',
+            'quantity'   => 'required',
+            'user_id'   => 'required'
         ]);
 
-        Auth::user()->transfers()->create([
-            'uuid' =>Str::uuid(),
-            'title' => $request->title,
-            'text' => $request->text
-        ]);
-        return to_route('transfers.index');
+        Transfer::create($validated);
+        return redirect()->route('transfers.index');
     }
 
     /**
@@ -90,7 +109,7 @@ class TransferController extends Controller
      */
     public function destroy(Transfer $transfer)
     {
-        if($transfer->user_id != Auth::id()){
+        if(auth()->user()->role != 'administrador'){
             return abort(403);
         }
 

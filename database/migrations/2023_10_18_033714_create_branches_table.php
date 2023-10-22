@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('ruc')->nullable();
             $table->string('country');
             $table->string('department');
             $table->string('province');
-            $table->string('city');
+            $table->string('district');
             $table->text('address');
-            //$table->boolean('is_factory')->default(false);
+            $table->enum('type', ['supplier', 'office', 'factory'])->default('office');
             $table->timestamps();
         });
     }

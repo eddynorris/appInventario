@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ !$note->trashed() ? __('Notas') : __('Basurero') }}
+            {{  __('Detalle de producto') }}
         </h2>
     </x-slot>
 
@@ -11,41 +11,23 @@
                 {{ session('success') }}
             </x-alert-success>
             <div class="flex">
-                @if(!$note->trashed())
-                    <p class="opacity-70">
-                        <strong>Created: </strong> {{ $note->created_at->diffForHumans() }}
-                    </p>
-                    <p class="opacity-70 ml-8">
-                        <strong>Updated: </strong> {{ $note->updated_at->diffForHumans() }}
-                    </p>
-                    <a href="{{ route('notes.edit', $note) }}" class="btn-link ml-auto">Editar</a>
-                    <form action="{{ route('notes.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger ml-4" onclick="return confirm('Tas seguro de moverlo al basurero?')">Mover al basurero</button>
-                    </form>
-                @else
-                    <p class="opacity-70">
-                        <strong>Eliminado: </strong> {{ $note->deleted_at->diffForHumans() }}
-                    </p>
-                    <form action="{{ route('trashed.update', $note) }}" method="post" class="ml-auto">
-                        @method('put')
-                        @csrf
-                        <button type="submit" class="btn-link"> Restaurar nota</button>
-                    </form>
-                    <form action="{{ route('trashed.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger ml-4" onclick="return confirm('Tas seguro mano? lo eliminas pa siempre')">Matarlo bien muerto</button>
-                    </form>
-                    
-                @endif
+                <p class="opacity-70">
+                    <strong>Creado: </strong> {{ $product->created_at->diffForHumans() }}
+                </p>
+                <p class="opacity-70 ml-8">
+                    <strong>Actualizado: </strong> {{ $product->updated_at->diffForHumans() }}
+                </p>
             </div>
             <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
                 <h2 class="font-bold text-4xl">
-                       {{ $note->title }}       
+                    Nombre: {{ $product->name }}       
                 </h2>
-                <p class="mt-6 whitespace-pre-wrap">{{ $note->text }}</p>
+                <p class="mt-6 whitespace-pre-wrap">Categoria: {{ $product->category->name }}</p>
+                <p class="mt-6 whitespace-pre-wrap">Descripcion: {{ $product->description }}</p>
+                <p class="mt-6 whitespace-pre-wrap">Unidad de medida{{ $product->unit_measure }}</p>
+                <p class="mt-6 whitespace-pre-wrap">Presentacion: {{ $product->container }}</p>
+                <p class="mt-6 whitespace-pre-wrap">Peso {{ $product->weight }}</p>
+                <p class="mt-6 whitespace-pre-wrap">Precio: {{ $product->price }}</p>
             </div>
         </div>
     </div>

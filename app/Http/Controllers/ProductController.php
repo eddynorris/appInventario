@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('category')->get();
         return view('products.index')->with('products', $products);
     }
 
@@ -20,7 +21,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        $categories = Category::select('id', 'name')->get();
+        return view('products.create')->with('categories',$categories);
     }
 
     /**
@@ -28,17 +30,18 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
+        $validated= $request->validate([
+            'category_id'   => 'required',
+            'name'   => 'required',
+            'description' => 'required',
+            'unit_measure'   => 'required',
+            'container'   => 'required',
+            'weight'   => 'required',
+            'price'   => 'required'
         ]);
 
-        Auth::user()->products()->create([
-            'uuid' =>Str::uuid(),
-            'title' => $request->title,
-            'text' => $request->text
-        ]);
-        return to_route('products.index');
+        Product::create($validated);
+        return redirect()->route('products.index');
     }
 
     /**
@@ -46,9 +49,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     { 
-        if(!$product->user->is(Auth::user())){
-            return abort(403);
-        }
+
         return view('products.show')->with('product',$product);
     }
 
@@ -57,10 +58,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        if($product->user_id != Auth::id()){
-            return abort(403);
-        }
-        return view('products.edit')->with('product',$product);
+        $categories = Category::select('id', 'name')->get();
+        return view('products.edit')->with(['categories' => $categories, 'product' => $product]);
     }
 
     /**
@@ -68,21 +67,17 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        if($product->user_id != Auth::id()){
-            return abort(403);
-        }
-
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
-        ]);
 
         $product->update([
-            'title'=> $request->title,
-            'text' => $request->text
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'unit_measure' => $request->unit_measure,
+            'container' => $request->container,
+            'weight' => $request->weight,
+            'price' => $request->price,
         ]);
-
-        return to_route('products.show', $product)->with('success','Nota Actualizada');
+        return to_route('products.index', $product)->with('success','Usuario Actualizado');
     }
 
     /**
@@ -90,10 +85,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if($product->user_id != Auth::id()){
-            return abort(403);
-        }
-
         $product->delete();
 
         return to_route('products.index')->with('success','Nota al basurero');

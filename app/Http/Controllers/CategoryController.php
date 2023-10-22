@@ -28,17 +28,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
+        $validated= $request->validate([
+            'name'   => 'required',
+            'description' => '',
         ]);
 
-        Auth::user()->categories()->create([
-            'uuid' =>Str::uuid(),
-            'title' => $request->title,
-            'text' => $request->text
-        ]);
-        return to_route('categories.index');
+        Category::create($validated);
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -46,9 +42,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     { 
-        if(!$category->user->is(Auth::user())){
-            return abort(403);
-        }
+
         return view('categories.show')->with('category',$category);
     }
 
@@ -57,10 +51,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        if($category->user_id != Auth::id()){
-            return abort(403);
-        }
-        return view('categories.edit')->with('category',$category);
+        return view('categories.edit')->with('category', $category);
     }
 
     /**
@@ -68,21 +59,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        if($category->user_id != Auth::id()){
-            return abort(403);
-        }
-
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
-        ]);
 
         $category->update([
-            'title'=> $request->title,
-            'text' => $request->text
+            'name' => $request->name,
+            'description' => $request->description,
         ]);
-
-        return to_route('categories.show', $category)->with('success','Nota Actualizada');
+        return to_route('categories.index', $category)->with('success','Usuario Actualizado');
     }
 
     /**
@@ -90,10 +72,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        if($category->user_id != Auth::id()){
-            return abort(403);
-        }
-
         $category->delete();
 
         return to_route('categories.index')->with('success','Nota al basurero');

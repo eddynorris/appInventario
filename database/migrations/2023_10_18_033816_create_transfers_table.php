@@ -14,15 +14,10 @@ return new class extends Migration
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('transaction_type', ['supplier_to_factory', 'factory_to_branch']);
+            $table->boolean('transaction_type')->default(false);
 
-            // Origen de la transacción (puede ser un proveedor o una sucursal)
-            //$table->unsignedBigInteger('from_id')->nullable();
-            $table->foreignId('supplier_id')->constrained()->nullable();
-
-            // Destino de la transacción (siempre será una sucursal o la fábrica)
-            //$table->unsignedBigInteger('to_branch_id')->nullable();
-            $table->foreignId('branch_id')->constrained()->nullable();
+            $table->string('from_id');
+            $table->foreignId('branch_id')->constrained();
 
             //$table->unsignedBigInteger('product_id');
             $table->foreignId('product_id')->constrained();
@@ -32,13 +27,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
 
             $table->timestamps();
-
-            /* Establecer relaciones
-            $table->foreign('from_id')->references('id')->on('suppliers')->onDelete('cascade');
-            $table->foreign('to_branch_id')->references('id')->on('branches')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); 
-            */
         });
     }
 

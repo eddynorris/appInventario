@@ -15,6 +15,9 @@ class UserController extends Controller
 {
     public function index()
     {
+        if(auth()->user()->role != 'administrador'){
+            return abort(403);
+        }
         $users = User::with('branch')->get();
         return view('users.index')->with('users', $users);
     }
@@ -24,6 +27,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->role != 'administrador'){
+            return abort(403);
+        }
         $roles = ['Repartidor', 'Empleado', 'Administrador'];
         $branches = Branch::select('id', 'name')->get();
         return view('users.create',['roles' => $roles , 'branches' => $branches]);
@@ -34,6 +40,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->role != 'administrador'){
+            return abort(403);
+        }
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
@@ -68,6 +77,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        if(auth()->user()->role != 'administrador'){
+            return abort(403);
+        }
         $roles = ['repartidor', 'empleado', 'administrador'];
         $branches = Branch::select('id', 'name')->get();
         return view('users.edit')->with(['roles' => $roles , 'branches' => $branches, 'user' => $user]);

@@ -11,9 +11,6 @@ class BranchController extends Controller
 {
     public function index()
     {
-        //
-        //$branches = Branch::where('user_id', Auth::id())->latest('updated_at')->paginate(5);
-        //$branches = Auth::user()->branches()
         $branches = Branch::all();
         return view('branches.index')->with('branches', $branches);
     }
@@ -31,17 +28,19 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
+        $validated= $request->validate([
+            'name'   => 'required',
+            'ruc' => '',
+            'country' => 'required',
+            'department' => 'required',
+            'province' => 'required',
+            'district' => 'required',
+            'address' => 'required',
+            'type' => 'required'
         ]);
 
-        Auth::user()->branches()->create([
-            'uuid' =>Str::uuid(),
-            'title' => $request->title,
-            'text' => $request->text
-        ]);
-        return to_route('branches.index');
+        Branch::create($validated);
+        return redirect()->route('branches.index');
     }
 
     /**
@@ -49,9 +48,7 @@ class BranchController extends Controller
      */
     public function show(Branch $branch)
     { 
-        if(!$branch->user->is(Auth::user())){
-            return abort(403);
-        }
+
         return view('branches.show')->with('branch',$branch);
     }
 
@@ -60,10 +57,7 @@ class BranchController extends Controller
      */
     public function edit(Branch $branch)
     {
-        if($branch->user_id != Auth::id()){
-            return abort(403);
-        }
-        return view('branches.edit')->with('branch',$branch);
+        return view('branches.edit')->with('branch', $branch);
     }
 
     /**
@@ -71,21 +65,18 @@ class BranchController extends Controller
      */
     public function update(Request $request, Branch $branch)
     {
-        if($branch->user_id != Auth::id()){
-            return abort(403);
-        }
-
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
-        ]);
 
         $branch->update([
-            'title'=> $request->title,
-            'text' => $request->text
+            'name'   => $request->name,
+            'ruc' => $request->ruc,
+            'country' => $request->country,
+            'department' => $request->department,
+            'province' => $request->province,
+            'district' =>$request->district,
+            'address' =>$request->address,
+            'type' => $request->type
         ]);
-
-        return to_route('branches.show', $branch)->with('success','Nota Actualizada');
+        return to_route('branches.index', $branch)->with('success','Usuario Actualizado');
     }
 
     /**
@@ -93,10 +84,6 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        if($branch->user_id != Auth::id()){
-            return abort(403);
-        }
-
         $branch->delete();
 
         return to_route('branches.index')->with('success','Nota al basurero');

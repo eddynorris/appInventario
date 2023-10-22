@@ -16,12 +16,12 @@ return new class extends Migration
             //$table->unsignedBigInteger('category_id');
             //$table->unsignedBigInteger('supplier_id')->nullable();
             $table->foreignId('category_id')->constrained();
-            $table->foreignId('supplier_id')->constrained()->nullable();
 
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('units');
-            $table->decimal('measures', 10, 2);
+            $table->string('unit_measure');
+            $table->string('container');
+            $table->decimal('weight', 10, 2);
             $table->decimal('price', 10, 2);
             $table->timestamps();
             

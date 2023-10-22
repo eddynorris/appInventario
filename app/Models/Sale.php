@@ -10,16 +10,14 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'document',
         'client',
         'address',
         'total_amount',
+        'total_weight',
+        'duration'
     ];
-
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class);
-    }
 
     public function user()
     {

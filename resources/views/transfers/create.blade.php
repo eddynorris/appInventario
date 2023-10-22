@@ -10,68 +10,73 @@
             <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
                 <form method="POST" action="{{ route('transfers.store') }}">
                     @csrf
-            
-                    <!-- Name -->
+
+                    <!-- Tipo transaccion -->
                     <div>
-                        <x-input-label for="name" :value="__('Name')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"  required autofocus autocomplete="name" />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        <x-input-label for="transaction_type" :value="__('Tipo')" />
+                        <select name="transaction_type" id="transaction_type" class="block mt-1 w-full rounded-md shadow-sm border-gray-300" onchange="updateBranches()">
+
+                            
+                            <option value="0" {{ 'selected' }}> Proveedor a Fabrica </option>
+                            <option value="1"> Fabrica a Sucursal </option>
+                        </select>
+                        <x-input-error :messages="$errors->get('transaction_type')" class="mt-2" />
                     </div>
             
-                    <!-- Email Address -->
+                    <!-- Desde donde se envia -->
                     <div class="mt-4">
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"  required autocomplete="username" />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                    </div>
-            
-                    <!-- Password -->
-                    <div class="mt-4">
-                        <x-input-label for="password" :value="__('Password')" />
-            
-                        <x-text-input id="password" class="block mt-1 w-full"
-                                        type="password"
-                                        name="password"
-                                        required autocomplete="new-password" />
-            
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
-            
-                    <!-- Confirm Password -->
-                    <div class="mt-4">
-                        <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            
-                        <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                        type="password"
-                                        name="password_confirmation" required autocomplete="new-password" />
-            
-                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                    </div>
-            
-                    <!-- User rol-->
-                    <div class="mt-4">
-                        <x-input-label for="role" :value="__('Rol')" />
+                        <x-input-label for="from_id" :value="__('Desde')" />
                         
-                        <select name="role" id="role" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
-                            @foreach($roles as $role)
-                                <option value="{{ $role }}" {{ old('role') == $role ? 'selected' : '' }}>{{ $role }}</option>
+                        <select name="from_id" id="from_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
+                            @foreach($branchesSupplier as $supplier)
+                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('from_id')" class="mt-2" />
                     </div>
             
-                    <!-- User branch -->
+                    <!-- Hacia donde llego-->
                     <div class="mt-4">
-                        <x-input-label for="branch_id" :value="__('Sucursal')" />
+                        <x-input-label for="branch_id" :value="__('Hacia')" />
                         
                         <select name="branch_id" id="branch_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
-                            @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @foreach($branchesFactory as $branche)
+                                <option value="{{ $branche->id }}">{{ $branche->name }}</option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('branch_id')" class="mt-2" />
                     </div>
+                    <!-- Producto-->
+                    <div class="mt-4">
+                        <x-input-label for="product_id" :value="__('Producto')" />
+                        
+                        <select name="product_id" id="product_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('product_id')" class="mt-2" />
+                    </div>
             
+                    <!-- Usuario -->
+                    <div class="mt-4">
+                        <x-input-label for="user_id" :value="__('Transportista')" />
+                        
+                        <select name="user_id" id="user_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('user_id')" class="mt-2" />
+                    </div>
+            
+                    <!-- Cantidad -->
+                    <div  class="mt-4">
+                        <x-input-label for="quantity" :value="__('Cantidad (KG)')" />
+                        <x-text-input id="quantity" class="block mt-1 w-full" type="text" name="quantity"  required autofocus autocomplete="Cantidad" />
+                        <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
+                    </div>
+
                     <div class="flex items-center justify-end mt-4">     
                         <x-primary-button class="ml-4">
                             {{ __('Registrar') }}
@@ -82,4 +87,36 @@
             </div>
         </div>
     </div>
+    <script>
+        function updateBranches() {
+            const transactionType = document.getElementById('transaction_type').value;
+            const fromSelect = document.getElementById('from_id');
+            const toSelect = document.getElementById('branch_id');
+    
+            // Clear both selects
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+    
+            // Supplier to Factory
+            if (transactionType == "0") {
+                @foreach($branchesSupplier as $supplier)
+                    fromSelect.innerHTML += `<option value="{{ $supplier->id }}">{{ $supplier->name }}</option>`;
+                @endforeach
+    
+                @foreach($branchesFactory as $branch)
+                    toSelect.innerHTML += `<option value="{{ $branch->id }}">{{ $branch->name }}</option>`;
+                @endforeach
+            }
+            // Factory to Office
+            else {
+                @foreach($branchesFactory as $branch)
+                    fromSelect.innerHTML += `<option value="{{ $branch->id }}">{{ $branch->name }}</option>`;
+                @endforeach
+    
+                @foreach($branchesOffice as $office)
+                    toSelect.innerHTML += `<option value="{{ $office->id }}">{{ $office->name }}</option>`;
+                @endforeach
+            }
+        }
+    </script>
 </x-app-layout>
