@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,8 @@ class UserController extends Controller
             return abort(403);
         }
         $users = User::with('branch')->get();
-        return view('users.index')->with('users', $users);
+        $heads = ['Nombre','Correo','Rol','Sucursal','Acciones'];
+        return view('users.index')->with(['heads' => $heads ,'users'=> $users]);
     }
 
     /**
@@ -107,6 +109,9 @@ class UserController extends Controller
     public function destroy(int $id)
     {
         $user = User::findOrFail($id);
+        // Actualiza las relaciones
+        $user->sales()->update(['user_id' => 1]);
+        $user->transfers()->update(['user_id' => 1]);
         $user->delete();
 
         return to_route('users.index')->with('success','Usuario Eliminado');

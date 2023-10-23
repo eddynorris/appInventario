@@ -1,30 +1,58 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{  __('Detalle de Usuario') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> 
-            <x-alert-success>
-                {{ session('success') }}
-            </x-alert-success>
-            <div class="flex">
-                <p class="opacity-70">
-                    <strong>Creado: </strong> {{ $user->created_at->diffForHumans() }}
-                </p>
-                <p class="opacity-70 ml-8">
-                    <strong>Actualizado: </strong> {{ $user->updated_at->diffForHumans() }}
-                </p>
-            </div>
-            <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
-                <h2 class="font-bold text-4xl">
-                    Nombre: {{ $user->name }}       
-                </h2>
-                <p class="mt-6 whitespace-pre-wrap">Correo: {{ $user->email }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Rol asignado: {{ $user->role }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Sucursal a la que pertenece: {{ $user->branch->name }}</p>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Detalles de usuario</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Nombre</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $user->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Correo</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $user->email }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Rol asignado</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $user->role }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Sucursal a la que pertenece</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $user->branch->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Fecha de creacion del usuario</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $user->created_at }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Ultima actualizacion</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $user->updated_at->diffForHumans() }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,43 +1,46 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <!--header -->
-        </h2>
-    </x-slot>
-    <div class="container mx-auto px-4 mt-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 mb-4">
-                <h1 class="text-2xl font-bold">Usuarios</h1>
-                <a href="{{ route('users.create') }}" class="btn-link btn-lg mb-2">Agregar</a>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Usuarios</h3>
+            <div class="card-tools">
+                <a  href="{{ route('users.create') }}" type="button" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Nuevo Usuario
+                </a>
             </div>
         </div>
-        <table class="min-w-full bg-white border rounded-lg overflow-hidden">
-            <thead class="bg-gray-200">
-                <tr class="text-center text-gray-600 border-b font-bold">
-                    <th class="px-6 py-3">Id</th>
-                    <th class="px-6 py-3">Nombre</th>
-                    <th class="px-6 py-3">Correo</th>
-                    <th class="px-6 py-3">Rol</th>
-                    <th class="px-6 py-3">Sucursal</th>
-                    <th class="px-6 py-3">Acciones</th>
+        <table id="usuarios" class="table table-striped shadow-lg mt-4">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Sucursal</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($users as $user)
-                    <tr class="hover:bg-gray-100 text-center">
-                        <td class="px-6 py-4 border-b">{{ $user->id }}</td>
-                        <td class="px-6 py-4 border-b">{{ $user->name }}</td>
-                        <td class="px-6 py-4 border-b">{{ $user->email }}</td>
-                        <td class="px-6 py-4 border-b">{{ $user->role }}</td>
-                        <td class="px-6 py-4 border-b">{{ $user->branch->name }}</td>
+                    <tr>
+                        <td>{{ $user->id }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->role }}</td>
+                        <td>{{ $user->branch->name }}</td>
                         <!-- Agrega aquí otros campos si los tienes -->
-                        <td class="px-6 py-4 border-b text-center">
-                            <a href="{{ route('users.show', $user) }}" class="text-blue-500 hover:text-blue-700 mx-2">Ver</a>
-                            <a href="{{ route('users.edit', $user) }}" class="text-green-500 hover:text-green-700 mx-2">Editar</a>
+                        <td class="project-actions d-flex align-items-right">
+                            <a href="{{ route('users.show', $user) }}" class="btn btn-primary btn-sm mr-1">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('users.edit', $user) }}" class="btn btn-info btn-sm mr-1">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
                             <form method="post" action="{{ route('users.destroy', $user->id)}}">
                                 @csrf
-                                @method('delete')
-                                <x-danger-button class="" onclick="return confirm('Esta seguro?')">Eliminar</x-danger-button>
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Esta seguro?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                              </form>
                         </td>
                     </tr>
