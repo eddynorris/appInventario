@@ -303,8 +303,44 @@ return [
 
         // Sidebar items:
         [
+            'text'        => 'Dashboard',
+            'route'         => 'dashboard',
+            'icon'        => 'far fa-fw fa-user',
+            'label_color' => 'success',
+        ],
+        [
             'text'        => 'Usuarios',
             'route'         => 'users.index',
+            'icon'        => 'far fa-fw fa-user',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Sucursales',
+            'route'         => 'branches.index',
+            'icon'        => 'far fa-fw fa-user',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Productos',
+            'route'         => 'products.index',
+            'icon'        => 'far fa-fw fa-user',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Categorias',
+            'route'         => 'categories.index',
+            'icon'        => 'far fa-fw fa-user',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Transferencias',
+            'route'         => 'transfers.index',
+            'icon'        => 'far fa-fw fa-truck-fast',
+            'label_color' => 'success',
+        ],
+        [
+            'text'        => 'Ventas',
+            'route'         => 'sales.index',
             'icon'        => 'far fa-fw fa-user',
             'label_color' => 'success',
         ],

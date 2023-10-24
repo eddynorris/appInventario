@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="card">
-        <div class="card-header">
+        <div class="card-header mt-4">
             <h3 class="card-title">Usuarios</h3>
             <div class="card-tools">
                 <a  href="{{ route('users.create') }}" type="button" class="btn btn-primary">

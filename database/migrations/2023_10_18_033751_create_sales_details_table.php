@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained();
 
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
-            $table->decimal('subtotal', 10, 2);
+            $table->decimal('price', 10, 2); //cambiar a sub_price
+            $table->decimal('subtotal', 10, 2); //cambiar subtotal por otra palabra que haga referencia agl peso sub total
             $table->timestamps();
 
             //$table->foreign('sale_id')->references('id')->on('sales');
