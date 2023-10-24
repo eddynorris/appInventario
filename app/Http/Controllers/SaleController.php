@@ -76,7 +76,8 @@ class SaleController extends Controller
     public function show(Sale $sale)
     { 
 
-        return view('sales.show')->with('sale',$sale);
+        $saleDetails = $sale->salesDetails;
+        return view('sales.show', compact('sale', 'saleDetails'));
     }
 
     /**

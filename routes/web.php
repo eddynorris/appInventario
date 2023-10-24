@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BranchInventoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UserController;
 use App\Models\Transfer;
@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
 //Route::resource('/instructor/schedule', ScheduledClassController::class)->only(['index','create','store','destroy'])->middleware(['auth','role:instructor']);
 Route::resource('/users', UserController::class)->middleware(['auth']);
 Route::resource('/branches', BranchController::class)->middleware(['auth']);
-Route::resource('/suppliers', SupplierController::class)->middleware(['auth']);
+Route::resource('/inventories', BranchInventoryController::class)->middleware(['auth']);
 Route::resource('/products', ProductController::class)->middleware(['auth']);
 Route::resource('/categories', CategoryController::class)->middleware(['auth']);
 Route::resource('/transfers', TransferController::class)->middleware(['auth']);

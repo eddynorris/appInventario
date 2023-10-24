@@ -1,40 +1,41 @@
-
 <x-app-layout>
     <div class="card">
         <div class="card-header mt-4">
-            <h3 class="card-title">Usuarios</h3>
+            <h3 class="card-title">Tabla Inventario</h3>
             <div class="card-tools">
-                <a  href="{{ route('categories.create') }}" type="button" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Nuevo Usuario
+                <a  href="{{ route('inventories.create') }}" type="button" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Agregar stock
                 </a>
             </div>
         </div>
-        <table id="usuarios" class="table table-striped shadow-lg mt-4">
+        <table id="inventories" class="table table-striped shadow-lg mt-4">
             <thead class="bg-primary text-white">
                 <tr>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Fecha de creacion</th>
+                    <th>Sucursal</th>
+                    <th>Producto</th>
+                    <th>Stock </th>
+                    <th>Cantidad (KG) </th>
                     <th>Ultima actualizacion</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($categories as $category)
+                @foreach($inventories as $inventory)
                     <tr>
-                        <td>{{ $category->name }}</td>
-                        <td>{{ $category->description }}</td>
-                        <td>{{ $category->created_at }}</td>
-                        <td>{{ $category->updated_at }}</td>
+                        <td>{{ $inventory->branch->name }}</td>
+                        <td>{{ $inventory->product->name }}</td>
+                        <td>{{ $inventory->stock }}</td>
+                        <td>{{ $inventory->product->weight * $inventory->stock}}</td>
+                        <td>{{ $inventory->updated_at->format('d-m-Y') }}</td>
                         <!-- Agrega aquí otros campos si los tienes -->
                         <td class="project-actions d-flex align-items-right">
-                            <a href="{{ route('categories.show', $category) }}" class="btn btn-primary btn-sm mr-1">
+                            <a href="{{ route('inventories.show', $inventory) }}" class="btn btn-primary btn-sm mr-1">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('categories.edit', $category) }}" class="btn btn-info btn-sm mr-1">
+                            <a href="{{ route('inventories.edit', $inventory) }}" class="btn btn-info btn-sm mr-1">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <form method="post" action="{{ route('categories.destroy', $category->id)}}">
+                            <form method="post" action="{{ route('inventories.destroy', $inventory->id)}}">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm" onclick="return confirm('Esta seguro?')">

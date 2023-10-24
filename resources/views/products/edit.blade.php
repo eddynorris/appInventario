@@ -1,4 +1,55 @@
 <x-app-layout>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Editar producto</h3>
+        </div>
+            <form method="POST" action="{{ route('products.update', $product) }}">
+                @csrf
+                @method('patch')
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}"  placeholder="Nombre del producto">
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select class="form-control" id="category_id" name="category_id">
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('role', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripcion</label>
+                        <input type="text" class="form-control" id="description" name="description" value="{{ $product->description }}"  placeholder="Descripcion del producto">
+                    </div>
+                    <div class="form-group">
+                        <label for="unit_measure">Unidad de medida</label>
+                        <input type="text" class="form-control" id="unit_measure" name="unit_measure" value="{{ $product->unit_measure }}"  placeholder="Unidad de medida (kg, tn, etc)">
+                    </div>
+                    <div class="form-group">
+                        <label for="container">Contenedor</label>
+                        <input type="text" class="form-control" id="container" name="container" value="{{ $product->container }}"  placeholder="Contenedor del producto (bolsas, sacos, etc)">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Peso</label>
+                        <input type="number" class="form-control" id="weight" name="weight" step="0.01" min="0" value="{{ $product->weight }}"  placeholder="Peso del producto" > 
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Precio</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" value="{{ $product->price }}"  placeholder="Precio" >
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary ">Editar producto</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</x-app-layout>
+
+
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Editar productos') }}
@@ -16,8 +67,8 @@
                         <x-input-label for="category_id" :value="__('Categoria')" />
                         
                         <select name="category_id" id="category_id" class="block mt-1 w-full rounded-md shadow-sm border-gray-300">
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('role', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @foreach($categories as $product)
+                                <option value="{{ $product->id }}" {{ old('role', $product->category_id) == $product->id ? 'selected' : '' }}>{{ $product->name }}</option>
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('category_id')" class="mt-2" />

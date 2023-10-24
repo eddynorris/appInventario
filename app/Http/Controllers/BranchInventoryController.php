@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\BranchInventory;
+use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,8 +14,8 @@ class BranchInventoryController extends Controller
     public function index()
     {
 
-        $branchInventory = BranchInventory::all();
-        return view('branchInventory.index')->with('branchInventory', $branchInventory);
+        $inventories = BranchInventory::all();
+        return view('inventories.index')->with('inventories', $inventories);
     }
 
     /**
@@ -21,7 +23,10 @@ class BranchInventoryController extends Controller
      */
     public function create()
     {
-        return view('branchInventory.create');
+        $products = Product::get();
+        $branches = Branch::select('id', 'name')->get();
+
+        return view('inventories.create', compact('products', 'branches'));
     }
 
     /**
@@ -29,74 +34,57 @@ class BranchInventoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
+        $validated= $request->validate([
+            'branch_id' => 'required',
+            'product_id'   => 'required',
+            'stock'   => 'required',
         ]);
 
-        Auth::user()->branchInventory()->create([
-            'uuid' =>Str::uuid(),
-            'title' => $request->title,
-            'text' => $request->text
-        ]);
-        return to_route('branchInventory.index');
+        BranchInventory::create($validated);
+        return redirect()->route('inventories.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(BranchInventory $branchInventory)
+    public function show(BranchInventory $inventory)
     { 
-        if(!$branchInventory->user->is(Auth::user())){
-            return abort(403);
-        }
-        return view('branchInventory.show')->with('Branch',$branchInventory);
+        return view('inventories.show')->with('inventory',$inventory);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BranchInventory $branchInventory)
+    public function edit(BranchInventory $inventory)
     {
-        if($branchInventory->user_id != Auth::id()){
-            return abort(403);
-        }
-        return view('branchInventory.edit')->with('Branch',$branchInventory);
+        $products = Product::get();
+        $branches = Branch::select('id', 'name')->get();
+
+        return view('inventories.edit', compact('products','branches','inventory'));
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BranchInventory $branchInventory)
+    public function update(Request $request, BranchInventory $inventory)
     {
-        if($branchInventory->user_id != Auth::id()){
-            return abort(403);
-        }
-
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
+        $inventory->update([
+            'branch_id' => $request->branch_id,
+            'product_id' => $request->product_id,
+            'stock' => $request->stock,
         ]);
-
-        $branchInventory->update([
-            'title'=> $request->title,
-            'text' => $request->text
-        ]);
-
-        return to_route('branchInventory.show', $branchInventory)->with('success','Nota Actualizada');
+        return to_route('inventories.index', $inventory)->with('success','Usuario Actualizado');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BranchInventory $branchInventory)
+    public function destroy(BranchInventory $inventory)
     {
-        if($branchInventory->user_id != Auth::id()){
-            return abort(403);
-        }
 
-        $branchInventory->delete();
+        $inventory->delete();
 
-        return to_route('branchInventory.index')->with('success','Nota al basurero');
+        return to_route('inventories.index')->with('success','Nota al basurero');
     }
 }

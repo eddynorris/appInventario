@@ -1,51 +1,89 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ !$note->trashed() ? __('Notas') : __('Basurero') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> 
-            <x-alert-success>
-                {{ session('success') }}
-            </x-alert-success>
-            <div class="flex">
-                @if(!$note->trashed())
-                    <p class="opacity-70">
-                        <strong>Created: </strong> {{ $note->created_at->diffForHumans() }}
-                    </p>
-                    <p class="opacity-70 ml-8">
-                        <strong>Updated: </strong> {{ $note->updated_at->diffForHumans() }}
-                    </p>
-                    <a href="{{ route('notes.edit', $note) }}" class="btn-link ml-auto">Editar</a>
-                    <form action="{{ route('notes.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger ml-4" onclick="return confirm('Tas seguro de moverlo al basurero?')">Mover al basurero</button>
-                    </form>
-                @else
-                    <p class="opacity-70">
-                        <strong>Eliminado: </strong> {{ $note->deleted_at->diffForHumans() }}
-                    </p>
-                    <form action="{{ route('trashed.update', $note) }}" method="post" class="ml-auto">
-                        @method('put')
-                        @csrf
-                        <button type="submit" class="btn-link"> Restaurar nota</button>
-                    </form>
-                    <form action="{{ route('trashed.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger ml-4" onclick="return confirm('Tas seguro mano? lo eliminas pa siempre')">Matarlo bien muerto</button>
-                    </form>
-                    
-                @endif
-            </div>
-            <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
-                <h2 class="font-bold text-4xl">
-                       {{ $note->title }}       
-                </h2>
-                <p class="mt-6 whitespace-pre-wrap">{{ $note->text }}</p>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Detalles de usuario</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Usuario</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->user->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">DNI</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->document }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Cliente</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->client }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Direccion</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->address }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Precio total</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->total_amount }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Peso total</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->total_weight }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Duracion</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->duration }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Fecha </span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $sale->created_at }}</span>
+                        </div>
+                    </div>
+                </div>
+                @foreach($saleDetails as $detail)
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ $detail->product->name }}</h3> 
+                            <!-- Suponiendo que tienes una relación product en tu modelo SaleDetail -->
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Cantidad:</strong> {{ $detail->quantity }}</p>
+                            <p><strong>Precio Unitario:</strong> ${{ number_format($detail->price, 2) }}</p>
+                            <p><strong>Peso:</strong> {{ number_format($detail->product->weight, 2) }}kg</p>
+                            <p><strong>Precio Subtotal:</strong> ${{ number_format($detail->subtotal, 2) }}</p>
+                            <p><strong>Peso Total:</strong> {{ number_format($detail->product->weight * $detail->quantity, 2) }}kg</p>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

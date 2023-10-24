@@ -1,31 +1,82 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{  __('Detalle de dependencia') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex">
-                <p class="opacity-70">
-                    <strong>Creado: </strong> {{ $branch->created_at->diffForHumans() }}
-                </p>
-                <p class="opacity-70 ml-8">
-                    <strong>Actualizado: </strong> {{ $branch->updated_at->diffForHumans() }}
-                </p>
-            </div>
-            <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
-                <h2 class="font-bold text-4xl">
-                    Nombre: {{ $branch->name }}       
-                </h2>
-                <p class="mt-6 whitespace-pre-wrap">Ruc: {{ $branch->ruc }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Pais: {{ $branch->country }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Departamento de: {{ $branch->department }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Provincia de: {{ $branch->province }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Distrito de : {{ $branch->district }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Direccion {{ $branch->address }}</p>
-                <p class="mt-6 whitespace-pre-wrap">Tipo: {{ $branch->type }}</p>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Detalles de la sucursal</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Nombre</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">RUC</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->ruc }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Departamento</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->department }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Provincia</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->province }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Distrito</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->district }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Direccion</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->address }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Tipo de sucursal</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->type }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Fecha de creacion</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->created_at }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Ultima actualizacion</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $branch->updated_at->diffForHumans() }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

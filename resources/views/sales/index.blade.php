@@ -8,7 +8,7 @@
                 </a>
             </div>
         </div>
-        <table id="usuarios" class="table table-striped shadow-lg mt-4">
+        <table id="sales" class="table table-striped shadow-lg mt-4">
             <thead class="bg-primary text-white">
                 <tr>
                     <th>Usuario</th>

@@ -1,49 +1,50 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            <!--header -->
-        </h2>
-    </x-slot>
-    <div class="container mx-auto px-4 mt-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 mb-4">
-                <h1 class="text-2xl font-bold">Productos</h1>
-                <a href="{{ route('products.create') }}" class="btn-link btn-lg mb-2">Agregar</a>
+    <div class="card">
+        <div class="card-header mt-4">
+            <h3 class="card-title">Productos</h3>
+            <div class="card-tools">
+                <a  href="{{ route('products.create') }}" type="button" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Nuevo Producto
+                </a>
             </div>
         </div>
-        <table class="min-w-full bg-white border rounded-lg overflow-hidden">
-            <thead class="bg-gray-200">
-                <tr class="text-center text-gray-600 border-b font-bold">
-                    <th class="px-6 py-3">Id</th>
-                    <th class="px-6 py-3">Categoria</th>
-                    <th class="px-6 py-3">Nombre</th>
-                    <th class="px-6 py-3">Descripcion</th>
-                    <th class="px-6 py-3">Unidad de medida</th>
-                    <th class="px-6 py-3">Aspecto</th>
-                    <th class="px-6 py-3">Peso</th>
-                    <th class="px-6 py-3">Precio</th>
-                    <th class="px-6 py-3">Acciones</th>
+        <table id="usuarios" class="table table-striped shadow-lg mt-4">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoria</th>
+                    <th>Descripcion</th>
+                    <th>Unidad de medida</th>
+                    <th>Contenedor</th>
+                    <th>Peso</th>
+                    <th>Precio</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($products as $product)
-                    <tr class="hover:bg-gray-100 text-center">
-                        <td class="px-6 py-4 border-b">{{ $product->id }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->category->name }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->name }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->description }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->unit_measure }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->container }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->weight }}</td>
-                        <td class="px-6 py-4 border-b">{{ $product->price }}</td>
+                    <tr>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $product->category->name }}</td>
+                        <td>{{ $product->description }}</td>
+                        <td>{{ $product->unit_measure }}</td>
+                        <td>{{ $product->container }}</td>
+                        <td>{{ $product->weight }}</td>
+                        <td>{{ $product->price }}</td>
                         <!-- Agrega aquí otros campos si los tienes -->
-                        <td class="px-6 py-4 border-b text-center">
-                            <a href="{{ route('products.show', $product) }}" class="text-blue-500 hover:text-blue-700 mx-2">Ver</a>
-                            <a href="{{ route('products.edit', $product) }}" class="text-green-500 hover:text-green-700 mx-2">Editar</a>
+                        <td class="project-actions d-flex align-items-right">
+                            <a href="{{ route('products.show', $product) }}" class="btn btn-primary btn-sm mr-1">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('products.edit', $product) }}" class="btn btn-info btn-sm mr-1">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
                             <form method="post" action="{{ route('products.destroy', $product->id)}}">
                                 @csrf
-                                @method('delete')
-                                <x-danger-button class="" onclick="return confirm('Esta seguro?')">Eliminar</x-danger-button>
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Esta seguro?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                              </form>
                         </td>
                     </tr>

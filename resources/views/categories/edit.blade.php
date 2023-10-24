@@ -1,38 +1,26 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Editar categoria') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
-                <form method="POST" action="{{ route('categories.update', $category) }}">
-                    @csrf
-                    @method('patch')
-
-                    <!-- Nombre -->
-                    <div  class="mt-4">
-                        <x-input-label for="name" :value="__('Nombre')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"  :value="old('name', $category->name)" required autofocus/>
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Editar categoria</h3>
+        </div>
+            <form method="POST" action="{{ route('categories.update', $category) }}">
+                @csrf
+                @method('patch')
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{  $category->name }}" placeholder="Nombre de la categoria">
                     </div>
-
-                     <!-- Descripcion -->
-                     <div  class="mt-4">
-                        <x-input-label for="description" :value="__('Descripcion del producto')" />
-                        <x-text-input id="description" class="block mt-1 w-full" type="text" name="description" :value="old('name', $category->description)"/>
-                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
-                    </div>  
-
-                    <div class="flex items-center justify-end mt-4">     
-                        <x-primary-button class="ml-4">
-                            {{ __('Registrar') }}
-                        </x-primary-button>
+                    <div class="form-group">
+                        <label for="description">Descripcion</label>
+                        <input type="text" class="form-control" id="description" name="description" value="{{ $category->description }}" placeholder="Ingrese una descripcion">
                     </div>
-                </form>
-            </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary ">Registrar</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </x-app-layout>
+

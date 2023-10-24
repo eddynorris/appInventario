@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Fogo de</b> CHAO',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -321,6 +321,12 @@ return [
             'label_color' => 'success',
         ],
         [
+            'text'        => 'Inventario',
+            'route'         => 'inventories.index',
+            'icon'        => 'far fa-fw fa-user',
+            'label_color' => 'success',
+        ],
+        [
             'text'        => 'Productos',
             'route'         => 'products.index',
             'icon'        => 'far fa-fw fa-user',
@@ -335,7 +341,7 @@ return [
         [
             'text'        => 'Transferencias',
             'route'         => 'transfers.index',
-            'icon'        => 'far fa-fw fa-truck-fast',
+            'icon'        => 'far fa-fw fa-user',
             'label_color' => 'success',
         ],
         [

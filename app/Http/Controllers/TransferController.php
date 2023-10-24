@@ -34,7 +34,7 @@ class TransferController extends Controller
         $branchesOffice = $branches->where('type', 'office');
         $branchesSupplier = $branches->where('type', 'supplier');
 
-        $products = Product::select('id', 'name')->get();
+        $products = Product::get();
         $users = User::select('id', 'name')->get();
 
         return view('transfers.create',['branchesOffice' => $branchesOffice ,'branchesSupplier' => $branchesSupplier ,'branchesFactory' => $branchesFactory ,'products' => $products,'users' => $users]);
@@ -65,9 +65,7 @@ class TransferController extends Controller
      */
     public function show(Transfer $transfer)
     { 
-        if(!$transfer->user->is(Auth::user())){
-            return abort(403);
-        }
+
         return view('transfers.show')->with('transfer',$transfer);
     }
 
@@ -76,10 +74,17 @@ class TransferController extends Controller
      */
     public function edit(Transfer $transfer)
     {
-        if($transfer->user_id != Auth::id()){
-            return abort(403);
-        }
-        return view('transfers.edit')->with('transfer',$transfer);
+
+        $branches = Branch::select('id','name','type')->get();
+
+        $branchesFactory = $branches->where('type', 'factory');
+        $branchesOffice = $branches->where('type', 'office');
+        $branchesSupplier = $branches->where('type', 'supplier');
+
+        $products = Product::get();
+        $users = User::select('id', 'name')->get();
+
+        return view('transfers.edit',  compact('branches', 'branchesFactory', 'branchesOffice', 'branchesSupplier','products','users','transfer'));
     }
 
     /**
@@ -87,21 +92,15 @@ class TransferController extends Controller
      */
     public function update(Request $request, Transfer $transfer)
     {
-        if($transfer->user_id != Auth::id()){
-            return abort(403);
-        }
-
-        $request->validate([
-            'title' => 'required|max:120',
-            'text' => 'required'
-        ]);
-
         $transfer->update([
-            'title'=> $request->title,
-            'text' => $request->text
+            'transaction_type' => $request->transaction_type,
+            'from_id' => $request->from_id,
+            'branch_id' => $request->branch_id,
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'user_id' => $request->user_id,
         ]);
-
-        return to_route('transfers.show', $transfer)->with('success','Nota Actualizada');
+        return to_route('transfers.index', $transfer)->with('success','Usuario Actualizado');
     }
 
     /**

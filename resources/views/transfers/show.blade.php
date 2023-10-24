@@ -1,51 +1,77 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ !$note->trashed() ? __('Notas') : __('Basurero') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> 
-            <x-alert-success>
-                {{ session('success') }}
-            </x-alert-success>
-            <div class="flex">
-                @if(!$note->trashed())
-                    <p class="opacity-70">
-                        <strong>Created: </strong> {{ $note->created_at->diffForHumans() }}
-                    </p>
-                    <p class="opacity-70 ml-8">
-                        <strong>Updated: </strong> {{ $note->updated_at->diffForHumans() }}
-                    </p>
-                    <a href="{{ route('notes.edit', $note) }}" class="btn-link ml-auto">Editar</a>
-                    <form action="{{ route('notes.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger ml-4" onclick="return confirm('Tas seguro de moverlo al basurero?')">Mover al basurero</button>
-                    </form>
-                @else
-                    <p class="opacity-70">
-                        <strong>Eliminado: </strong> {{ $note->deleted_at->diffForHumans() }}
-                    </p>
-                    <form action="{{ route('trashed.update', $note) }}" method="post" class="ml-auto">
-                        @method('put')
-                        @csrf
-                        <button type="submit" class="btn-link"> Restaurar nota</button>
-                    </form>
-                    <form action="{{ route('trashed.destroy', $note) }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger ml-4" onclick="return confirm('Tas seguro mano? lo eliminas pa siempre')">Matarlo bien muerto</button>
-                    </form>
-                    
-                @endif
-            </div>
-            <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
-                <h2 class="font-bold text-4xl">
-                       {{ $note->title }}       
-                </h2>
-                <p class="mt-6 whitespace-pre-wrap">{{ $note->text }}</p>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Detalles de transferencia</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Usuario que realizo la transferencia</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->user->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Desde </span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->fromBranch->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Hacia</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->branch->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Producto enviado</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->product->name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Cantidad enviada</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->quantity }} 
+                                {{  $transfer->product->container }} de {{  $transfer->product->weight }}{{  $transfer->product->unit_measure }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Carga Total</span>
+                            <span class="info-box-number text-center text-muted mb-0">
+                                {{ $transfer->quantity * $transfer->product->weight }}{{ $transfer->product->unit_measure }} 
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Fecha y hora de embarque</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->created_at }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <div class="info-box bg-light">
+                        <div class="info-box-content">
+                            <span class="info-box-text text-center text-muted">Fecha de llegada</span>
+                            <span class="info-box-number text-center text-muted mb-0">{{  $transfer->updated_at->diffForHumans() }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
