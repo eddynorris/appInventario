@@ -33,11 +33,11 @@
                     </div>
                     <div class="form-group">
                         <label for="total_amount">Precio Total</label>
-                        <input type="text" class="form-control" id="total_amount" name="total_amount" placeholder="Precio Total" readonly>
+                        <input type="number" class="form-control" id="total_amount" name="total_amount" min="0" value="0" readonly>
                     </div>
                     <div class="form-group">
                         <label for="total_weight">Peso Total</label>
-                        <input type="text" class="form-control" id="total_weight" name="total_weight" placeholder="Carga Total" readonly> 
+                        <input type="number" class="form-control" id="total_weight" name="total_weight"  min="0" value="0" readonly> 
                     </div>
                     <div class="form-group">
                         <label>Producto</label>
@@ -57,18 +57,18 @@
                             </div>
                             <div class="col-4">
                                 <button type="button" onclick="addToCart()" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> Agregar
+                                    <i class="fas fa-cart-plus fa-lg mr-2"></i> Agregar
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div id="cartContainer">
-                        <!-- Aquí se irán añadiendo las Cards de los productos -->
+                    <div class="container-fluid">
+                        <div id="cartContainer" class="row">
+                            <!-- Aquí se irán añadiendo las Cards de los productos -->
+                        </div>
                     </div>
-                    <div id="hiddenFields">
-                        <!-- Aquí se irán añadiendo los campos ocultos por cada producto añadido -->
-                    </div>
+
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary ">Registrar</button>
                     </div>
@@ -83,18 +83,9 @@
         const productSelect = document.getElementById('product_id');
         const quantityInput = document.getElementById('quantity');
         const cartContainer = document.getElementById('cartContainer');
-        const hiddenFieldsContainer = document.getElementById('hiddenFields');
         
         function findCardByProductId(productId) {
             return cartContainer.querySelector(`.card[data-product-id="${productId}"]`);
-        }
-
-        function createHiddenInput(name, value) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            return input;
         }
 
         function addToCart() {
@@ -105,46 +96,87 @@
             const productName = selectedProduct.text;
             const unitPrice = parseFloat(selectedProduct.getAttribute('data-price'));
             const unitWeight = parseFloat(selectedProduct.getAttribute('data-weight'));
-            const quantity = parseFloat(quantityInput.value);
-            totalAmount += unitPrice * quantity;
-            totalWeight += unitWeight * quantity;
+            const unitContainer = selectedProduct.getAttribute('data-container');
+            const unitUnit = selectedProduct.getAttribute('data-unit');
             
+            const quantity = parseFloat(quantityInput.value);
+
             let card = findCardByProductId(productId);
 
             if (!card) {
                 card = document.createElement('div');
                 card.classList.add('card');
+                card.classList.add('card-info');
+                card.classList.add('col-md-4');
+
                 card.setAttribute('data-product-id', productId);
-                
+                card.setAttribute('data-unit-price', unitPrice);
+                card.setAttribute('data-unit-weight', unitWeight);
+                card.setAttribute('data-quantity', quantity);
+
+                totalAmount += unitPrice * quantity;
+                totalWeight += unitWeight * quantity;
+            
                 document.getElementById('total_amount').value = totalAmount.toFixed(2);
                 document.getElementById('total_weight').value = totalWeight.toFixed(2);
 
                 cartContainer.append(card);
+
+                card.innerHTML = `
+
+                        <div class="card-header">
+                            <h3 class="card-title">${productName}</h3>
+                            <div class="card-tools">
+                                <button type="button" onclick="removeProduct(${productId})" class="btn btn-danger">
+                                    <i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label >Cantidad</label>
+                                    <input type="hidden" name="products[${productId}][id]" value="${productId}">
+                                    <input type="text" name="products[${productId}][quantity]" value="${quantity}" readonly class="form-control-plaintext">
+                                </div>
+                                <div class="col-4">    
+                                    <label >Precio</label>
+                                    <input type="text" name="products[${productId}][price]" value="${unitPrice}" readonly class="form-control-plaintext">
+                                </div>
+                                <div class="col-4">
+                                    <label >Peso</label>
+                                    <input type="text" name="products[${productId}][weight]" value="${unitWeight}" readonly class="form-control-plaintext">
+                                </div>
+                                <div class="col-4"> 
+                                    <input type="text" readonly class="form-control-plaintext" placeholder="Precio Subtotal: $${(unitPrice * quantity).toFixed(2)}">
+                                    <input type="text" readonly class="form-control-plaintext" placeholder="Peso Total: ${(unitWeight * quantity).toFixed(2)}kg">
+                                </div>
+                            </div>
+                        </div>
+
+            `;
+
             }
             else {
                 alert('El producto ya ha sido añadido al carrito.');
             }
 
-            card.innerHTML = `
-                <div class="card-header">
-                    <h3 class="card-title">${productName}</h3>
-                </div>
-                <div class="card-body">
-                    <p><strong>Cantidad:</strong> ${quantity}</p>
-                    <p><strong>Precio Unitario:</strong> $${unitPrice.toFixed(2)}</p>
-                    <p><strong>Peso:</strong> ${unitWeight.toFixed(2)}kg</p>
-                    <p><strong>Precio Subtotal:</strong> $${(unitPrice * quantity).toFixed(2)}</p>
-                    <p><strong>Peso Total:</strong> ${(unitWeight * quantity).toFixed(2)}kg</p>
-                </div>
-            `;
 
-            // Añadir campos ocultos
-            hiddenFieldsContainer.append(
-                createHiddenInput(`products[${productId}][id]`, productId),
-                createHiddenInput(`products[${productId}][quantity]`, quantity),
-                createHiddenInput(`products[${productId}][price]`, unitPrice),
-                createHiddenInput(`products[${productId}][weight]`, unitWeight)
-            );
+        }
+        function removeProduct(productId) {
+            const card = findCardByProductId(productId);
+            
+            if (card) {
+                const unitPrice = parseFloat(card.getAttribute('data-unit-price'));
+                const unitWeight = parseFloat(card.getAttribute('data-unit-weight'));
+                const quantity = parseFloat(card.getAttribute('data-quantity'));
+
+                totalAmount -= unitPrice * quantity;
+                totalWeight -= unitWeight * quantity;
+
+                document.getElementById('total_weight').value = totalWeight.toFixed(2);
+                document.getElementById('total_amount').value = totalAmount.toFixed(2);
+                card.remove();
+            }
         }
     </script>
 

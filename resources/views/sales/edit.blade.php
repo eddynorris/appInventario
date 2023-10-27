@@ -151,6 +151,7 @@
             card.innerHTML = `
                 <div class="card-header">
                     <h3 class="card-title">${productName}</h3>
+                    <button onclick="removeProduct(${productId})" style="cursor:pointer; background-color: red; color: white; border: none; float: right;">X</button>
                 </div>
                 <div class="card-body">
                     <p><strong>Cantidad:</strong> ${quantity}</p>
@@ -173,6 +174,11 @@
             return cartContainer.querySelector(`.card[data-product-id="${productId}"]`) || 
                    document.getElementById('preloadedCartContainer').querySelector(`.card[data-product-id="${productId}"]`);
         }
+        function removeProduct(productId) {
+            const card = findCardByProductId(productId);      
+                card.remove();
+        }
+
     </script>
 </x-app-layout>
 

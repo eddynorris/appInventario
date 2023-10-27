@@ -35,6 +35,7 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
             'user_id' => 'required',
             'document' => 'required',
@@ -48,7 +49,6 @@ class SaleController extends Controller
             'products.*.price' => 'required|numeric|min:0',
             'products.*.weight' => 'required|numeric|min:0'
         ]);
-
         DB::transaction(function () use ($request, $validated) {
 
             $sale = Sale::create($validated);
