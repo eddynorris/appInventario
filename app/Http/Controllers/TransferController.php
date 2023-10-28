@@ -108,7 +108,7 @@ class TransferController extends Controller
      */
     public function destroy(Transfer $transfer)
     {
-        if(auth()->user()->role != 'administrador'){
+        if(auth()->user()->role != 'admin'){
             return abort(403);
         }
 

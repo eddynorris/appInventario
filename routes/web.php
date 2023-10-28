@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BranchInventoryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PanelController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
@@ -22,13 +24,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,13 +33,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//Route::resource('/instructor/schedule', ScheduledClassController::class)->only(['index','create','store','destroy'])->middleware(['auth','role:instructor']);
-Route::resource('/users', UserController::class)->middleware(['auth']);
-Route::resource('/branches', BranchController::class)->middleware(['auth']);
-Route::resource('/inventories', BranchInventoryController::class)->middleware(['auth']);
-Route::resource('/products', ProductController::class)->middleware(['auth']);
-Route::resource('/categories', CategoryController::class)->middleware(['auth']);
-Route::resource('/transfers', TransferController::class)->middleware(['auth']);
-Route::resource('/sales', SaleController::class)->middleware(['auth']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/panel', [PanelController::class, 'index'])->name('panel.index');
+
+Route::resource('/users', UserController::class)->middleware(['auth','role:admin']);
+Route::resource('/branches', BranchController::class)->middleware(['auth','role:admin']);
+Route::resource('/inventories', BranchInventoryController::class)->middleware(['auth','role:admin']);
+Route::resource('/products', ProductController::class)->middleware(['auth','role:admin']);
+Route::resource('/categories', CategoryController::class)->middleware(['auth','role:admin']);
+Route::resource('/transfers', TransferController::class)->middleware(['auth','role:carrier,admin']);
+Route::resource('/sales', SaleController::class)->middleware(['auth','role:seller,admin']);
 
 require __DIR__.'/auth.php';

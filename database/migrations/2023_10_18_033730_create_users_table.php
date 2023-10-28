@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['repartidor', 'empleado', 'administrador'])->default('empleado');
+            $table->string('role')->default('seller');
             $table->foreignId('branch_id')->constrained()->nullable();
             //$table->unsignedBigInteger('branch_id')->nullable();
             $table->rememberToken();

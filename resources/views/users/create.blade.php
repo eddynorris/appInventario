@@ -7,27 +7,27 @@
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Nombre</label>
+                        <label for="name">Nombre</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Nombre completo">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Correo</label>
+                        <label for="email">Correo</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="ejemplo@ejemplo.com">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Contraseña</label>
+                        <label for="password">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="**********">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Confirmar contraseña</label>
+                        <label for="password_confirmation">Confirmar contraseña</label>
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="**********">
                     </div>
                     <div class="form-group">
                         <label>Rol</label>
-                        <select class="form-control" id="role" name="role"> 
-                            @foreach($roles as $role)
-                                <option value="{{ $role }}">{{ $role }}</option>
-                            @endforeach
+                        <select class="form-control" id="role" name="role">
+                            <option value="admin">Administrador</option>
+                            <option value="seller">Vendedor</option>
+                            <option value="carrier">Transportista</option>
                         </select>
                     </div>
                     <div class="form-group">

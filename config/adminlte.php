@@ -309,46 +309,60 @@ return [
             'label_color' => 'success',
         ],
         [
+            'text'        => 'Panel de control',
+            'route'         => 'panel.index',
+            'icon'        => 'fas fa-cog',
+            'label_color' => 'success',
+            'can'  => 'manage-admin'
+        ],
+        [
             'text'        => 'Usuarios',
             'route'         => 'users.index',
             'icon'        => 'fas fa-users',
             'label_color' => 'success',
+            'can'  => 'manage-admin'
         ],
         [
             'text'        => 'Sucursales',
             'route'         => 'branches.index',
             'icon'        => 'far fa-flag',
             'label_color' => 'success',
+            'can'  => 'manage-admin'
         ],
         [
             'text'        => 'Inventario',
             'route'         => 'inventories.index',
             'icon'        => 'fas fa-tag',
             'label_color' => 'success',
+            'can'  => 'manage-admin'
         ],
         [
             'text'        => 'Productos',
             'route'         => 'products.index',
             'icon'        => 'fas fa-shopping-bag',
             'label_color' => 'success',
+            'can'  => 'manage-admin'
         ],
         [
             'text'        => 'Categorias',
             'route'         => 'categories.index',
             'icon'        => 'far fa-copy',
             'label_color' => 'success',
+            'can'  => 'manage-admin'
         ],
         [
             'text'        => 'Transferencias',
             'route'         => 'transfers.index',
             'icon'        => 'fas fa-truck',
             'label_color' => 'success',
+            'can'  => 'manage-carrier'
         ],
         [
             'text'        => 'Ventas',
             'route'         => 'sales.index',
             'icon'        => 'fas fa-shopping-cart',
             'label_color' => 'success',
+            'can'  => 'manage-seller'
         ],
         ['header' => 'account_settings'],
         [
