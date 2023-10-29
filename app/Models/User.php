@@ -45,6 +45,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function hasRole($roleName)
+    {
+        return $this->role === $roleName;
+    }
+
     public function branch()
     {
         return $this->belongsTo(Branch::class);

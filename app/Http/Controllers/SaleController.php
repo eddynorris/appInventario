@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SalesDetail;
@@ -17,7 +18,8 @@ class SaleController extends Controller
     public function index()
     {
         $sales = Sale::with('user')->get();
-        return view('sales.index')->with('sales', $sales);
+        $clients = Client::get();
+        return view('sales.index')->with(['sales'=> $sales, 'clients' => $clients]);
     }
 
     /**
@@ -27,7 +29,9 @@ class SaleController extends Controller
     {
         $users = User::select('id', 'name')->get();
         $products = Product::get();
-        return view('sales.create')->with(['users' => $users, 'products' => $products]);
+        $clients = Client::get();
+        return view('sales.create', compact('users', 'products', 'clients'));
+        return view('transfers.edit', );
     }
 
     /**
@@ -38,9 +42,10 @@ class SaleController extends Controller
         
         $validated = $request->validate([
             'user_id' => 'required',
+            /*
             'document' => 'required',
             'client' => 'required',
-            'address' => 'required',
+            'address' => 'required', */
             'total_amount' => 'required',
             'total_weight' => 'required',
             'duration' => 'required|integer|min:0',
@@ -119,5 +124,13 @@ class SaleController extends Controller
         $sale->delete();
 
         return to_route('sales.index')->with('success','Nota al basurero');
+    }
+    public function dateReport()
+    {
+        $now = now();
+        $salesThisWeek = Sale::whereRaw("DATEDIFF(?, created_at) BETWEEN duration - 7 AND duration - 1", [$now])->get();
+        $salesThisMonth = Sale::whereRaw("DATEDIFF(?, created_at) BETWEEN duration - 30 AND duration - 8", [$now])->get();
+
+        return view('sales.dateReport')->with(['salesThisWeek' => $salesThisWeek, 'salesThisMonth' => $salesThisMonth]);
     }
 }

@@ -358,11 +358,20 @@ return [
             'can'  => 'manage-carrier'
         ],
         [
-            'text'        => 'Ventas',
-            'route'         => 'sales.index',
-            'icon'        => 'fas fa-shopping-cart',
-            'label_color' => 'success',
-            'can'  => 'manage-seller'
+            'text'    => 'Ventas',
+            'icon'    => 'fas fa-shopping-cart',
+            'submenu' => [
+                [
+                    'text' => 'Listar ventas',
+                    'route'  => 'sales.index',
+                    'can'  => 'manage-admin'
+                ],
+                [
+                    'text' => 'Venta nueva',
+                    'route'  => 'sales.create',
+                    'can'  => 'manage-seller'
+                ],
+            ],
         ],
         ['header' => 'account_settings'],
         [
@@ -375,44 +384,7 @@ return [
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
+
         ['header' => 'labels'],
         [
             'text'       => 'important',

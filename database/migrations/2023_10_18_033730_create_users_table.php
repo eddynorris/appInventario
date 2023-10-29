@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->default('seller');
-            $table->foreignId('branch_id')->constrained()->nullable();
+            $table->foreignId('branch_id')->constrained();
             //$table->unsignedBigInteger('branch_id')->nullable();
             $table->rememberToken();
             $table->timestamps();

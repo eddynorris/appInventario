@@ -38,7 +38,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/panel', [PanelController::class, 'index'])->name('panel.index');
+//Reportes
+Route::get('/sales/dateReport', [SaleController::class, 'dateReport'])->name('sales.dateReport')->middleware(['auth','role:admin']);
 
+
+//Cruds
 Route::resource('/users', UserController::class)->middleware(['auth','role:admin']);
 Route::resource('/branches', BranchController::class)->middleware(['auth','role:admin']);
 Route::resource('/inventories', BranchInventoryController::class)->middleware(['auth','role:admin']);
@@ -46,5 +50,6 @@ Route::resource('/products', ProductController::class)->middleware(['auth','role
 Route::resource('/categories', CategoryController::class)->middleware(['auth','role:admin']);
 Route::resource('/transfers', TransferController::class)->middleware(['auth','role:carrier,admin']);
 Route::resource('/sales', SaleController::class)->middleware(['auth','role:seller,admin']);
+
 
 require __DIR__.'/auth.php';

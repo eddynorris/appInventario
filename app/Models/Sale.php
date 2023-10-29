@@ -11,9 +11,7 @@ class Sale extends Model
 
     protected $fillable = [
         'user_id',
-        'document',
-        'client',
-        'address',
+        'client_id',
         'total_amount',
         'total_weight',
         'duration'
@@ -23,7 +21,10 @@ class Sale extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    public function client() 
+    {
+        return $this->belongsTo(Client::class);
+    }
     public function salesDetails()
     {
         return $this->hasMany(SalesDetail::class);

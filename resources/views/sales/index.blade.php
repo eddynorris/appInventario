@@ -8,6 +8,11 @@
                 </a>
             </div>
         </div>
+        <div class="card-body">
+            <a  href="{{ route('sales.dateReport') }}" type="button" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Ver reporte
+            </a>
+        </div>
         <table id="sales" class="table table-striped shadow-lg mt-4">
             <thead class="bg-primary text-white">
                 <tr>
@@ -17,7 +22,7 @@
                     <th>Direccion</th>
                     <th>Precio Total</th>
                     <th>Peso Total</th>
-                    <th>Duracion</th>
+                    <th>Estado de entrega</th>
                     <th>Fecha de entrega</th>
                     <th></th>
                 </tr>
@@ -31,7 +36,18 @@
                         <td>{{ $sale->address }}</td>
                         <td>{{ $sale->total_amount }}</td>
                         <td>{{ $sale->total_weight }}</td>
-                        <td>{{ $sale->duration }}</td>
+                        <td class="project_progress">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-green" role="progressbar" aria-valuenow="{{ max(0, 
+                                    $sale->duration - now()->diffInDays($sale->created_at)) }}" 
+                                    aria-valuemin="0" aria-valuemax="{{ $sale->duration }}"
+                                    style="width: {{ (max(0, $sale->duration - now()->diffInDays($sale->created_at))/$sale->duration) * 100 }}%">
+                                </div>
+                            </div>
+                            <small>
+                               {{ max(0, $sale->duration - now()->diffInDays($sale->created_at)) }} Dias restantes
+                            </small>
+                        </td>
                         <td>{{ $sale->created_at->format('d-m-Y') }}</td>
                         <!-- Agrega aquí otros campos si los tienes -->
                         <td class="project-actions d-flex align-items-right">
