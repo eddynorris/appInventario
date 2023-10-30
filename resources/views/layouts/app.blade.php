@@ -21,9 +21,40 @@
 
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+
 @stop
 
 @section('js')
+<script>
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: '{{ session("success") }}',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '{{ session("error") }}',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
+
+    @if(session('warning'))
+        Swal.fire({
+            icon: 'warning',
+            title: 'Aviso',
+            text: '{{ session("warning") }}',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
+</script>
 
 @stop

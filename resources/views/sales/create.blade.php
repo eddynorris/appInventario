@@ -1,5 +1,7 @@
 
 <x-app-layout>
+
+
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">Agregar nueva venta</h3>
@@ -19,26 +21,17 @@
                     @else
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                     @endif
-
                     <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-4 col-sm-12">
-                                <label for="document">DNI</label>
-                                <input type="text" class="form-control" id="document" name="document" placeholder="Ingrese DNI">
-                            </div>
-                            <div class="col-md-8 col-sm-12">
-                                <label for="client">Cliente</label>
-                                <input type="text" class="form-control" id="client" name="client" placeholder="Nombre del cliente">
-                            </div>
-                            <div class="col-md-12 col-sm-12">
-                                <label for="address">Direccion</label>
-                                <input type="text" class="form-control" id="address" name="address" placeholder="Direccion del cliente">
-                            </div>
-                        </div>
+                        <label>Cliente</label>
+                        <select class="form-control" id="client_id" name="client_id"> 
+                            @foreach($clients as $client)
+                                <option value="{{ $client->id }}">Nombre: {{ $client->name }}   DNI: {{ $client->document }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="address">Duracion estimada</label>
-                        <input type="number" class="form-control" id="duration" name="duration" value="0" min="0" placeholder="Duracion estimada">
+                        <label for="address">Duracion estimada (Dias)</label>
+                        <input type="number" class="form-control" id="duration" name="duration" value="1" min="1" placeholder="Duracion estimada">
                     </div>
                     <div class="form-group">
                         <div class="row">
@@ -80,7 +73,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary ">Registrar</button>
+                        <button type="submit" class="btn btn-primary " onclick="return validateForm()">Registrar</button>
                     </div>
                 </div>
             </form>
@@ -93,6 +86,18 @@
         const productSelect = document.getElementById('product_id');
         const quantityInput = document.getElementById('quantity');
         const cartContainer = document.getElementById('cartContainer');
+
+        function validateForm() {
+            const productsAdded = cartContainer.children.length;
+
+            if (productsAdded === 0) {
+                alert('Por favor, añade al menos un producto antes de registrar.');
+                return false;
+            }
+        
+            return true;
+        }
+
         
         function findCardByProductId(productId) {
             return cartContainer.querySelector(`.card[data-product-id="${productId}"]`);

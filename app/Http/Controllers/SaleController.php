@@ -42,13 +42,10 @@ class SaleController extends Controller
         
         $validated = $request->validate([
             'user_id' => 'required',
-            /*
-            'document' => 'required',
-            'client' => 'required',
-            'address' => 'required', */
+            'client_id' => 'required',
             'total_amount' => 'required',
             'total_weight' => 'required',
-            'duration' => 'required|integer|min:0',
+            'duration' => 'required|integer|min:1',
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.price' => 'required|numeric|min:0',
@@ -71,7 +68,7 @@ class SaleController extends Controller
 
         }); //no esta guardando el timestamp del SalesDetails
 
-        return redirect()->route('sales.index');
+        return to_route('sales.index')->with('success', 'Registro guardado correctamente');
     }
 
 
@@ -92,8 +89,9 @@ class SaleController extends Controller
     {
         $users = User::select('id', 'name')->get();
         $products = Product::get();
+        $clients = Client::get();
         $saleDetails = $sale->salesDetails;
-        return view('sales.edit', compact('sale', 'users', 'products', 'saleDetails'));
+        return view('sales.edit', compact('sale', 'users', 'products', 'saleDetails','clients'));
     }
 
     /**
@@ -123,7 +121,7 @@ class SaleController extends Controller
 
         $sale->delete();
 
-        return to_route('sales.index')->with('success','Nota al basurero');
+        return to_route('sales.index')->with('success','Venta eliminada');
     }
     public function dateReport()
     {

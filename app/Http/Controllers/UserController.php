@@ -61,7 +61,7 @@ class UserController extends Controller
 
         event(new Registered($user));
 
-        return to_route('users.index');
+        return to_route('users.index')->with('success','Usuario creado correctamente');
     }
 
     public function show(User $user)

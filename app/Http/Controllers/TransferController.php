@@ -57,7 +57,7 @@ class TransferController extends Controller
         ]);
 
         Transfer::create($validated);
-        return redirect()->route('transfers.index');
+        return redirect()->route('transfers.index')->with('success','Transferencia guardada correctamente');
     }
 
     /**
@@ -100,7 +100,7 @@ class TransferController extends Controller
             'quantity' => $request->quantity,
             'user_id' => $request->user_id,
         ]);
-        return to_route('transfers.index', $transfer)->with('success','Usuario Actualizado');
+        return to_route('transfers.index', $transfer)->with('success','Transferencia Actualizada');
     }
 
     /**
@@ -114,6 +114,6 @@ class TransferController extends Controller
 
         $transfer->delete();
 
-        return to_route('transfers.index')->with('success','Nota al basurero');
+        return to_route('transfers.index')->with('success','Registro de transferencia eliminada');
     }
 }

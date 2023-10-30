@@ -40,7 +40,7 @@ class BranchController extends Controller
         ]);
 
         Branch::create($validated);
-        return redirect()->route('branches.index');
+        return redirect()->route('branches.index')->with('success','Sucursal creada correctamente');
     }
 
     /**
@@ -76,7 +76,7 @@ class BranchController extends Controller
             'address' =>$request->address,
             'type' => $request->type
         ]);
-        return to_route('branches.index', $branch)->with('success','Usuario Actualizado');
+        return to_route('branches.index', $branch)->with('success','Sucursal actualizada');
     }
 
     /**
@@ -86,6 +86,6 @@ class BranchController extends Controller
     {
         $branch->delete();
 
-        return to_route('branches.index')->with('success','Nota al basurero');
+        return to_route('branches.index')->with('success','Sucursal eliminada');
     }
 }

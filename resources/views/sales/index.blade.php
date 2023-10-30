@@ -19,7 +19,6 @@
                     <th>Usuario</th>
                     <th>DNI</th>
                     <th>Cliente</th>
-                    <th>Direccion</th>
                     <th>Precio Total</th>
                     <th>Peso Total</th>
                     <th>Estado de entrega</th>
@@ -31,17 +30,16 @@
                 @foreach($sales as $sale)
                     <tr>
                         <td>{{ $sale->user->name }}</td>
-                        <td>{{ $sale->document }}</td>
-                        <td>{{ $sale->client }}</td>
-                        <td>{{ $sale->address }}</td>
-                        <td>{{ $sale->total_amount }}</td>
-                        <td>{{ $sale->total_weight }}</td>
+                        <td>{{ $sale->client->document }}</td>
+                        <td>{{ $sale->client->name }}</td>
+                        <td>S/.{{ $sale->total_amount }}</td>
+                        <td>{{ $sale->total_weight }} KG</td>
                         <td class="project_progress">
                             <div class="progress progress-sm">
-                                <div class="progress-bar bg-green" role="progressbar" aria-valuenow="{{ max(0, 
-                                    $sale->duration - now()->diffInDays($sale->created_at)) }}" 
+                                <div class="progress-bar {{ max(0, $sale->duration - now()->diffInDays($sale->created_at)) < 7 ? 'bg-danger' : 'bg-green' }} " role="progressbar" 
+                                    aria-valuenow="{{ max(0, $sale->duration - now()->diffInDays($sale->created_at)) }}" 
                                     aria-valuemin="0" aria-valuemax="{{ $sale->duration }}"
-                                    style="width: {{ (max(0, $sale->duration - now()->diffInDays($sale->created_at))/$sale->duration) * 100 }}%">
+                                    style="width: {{ $sale->duration == 0 ? 0 : (max(0, $sale->duration - now()->diffInDays($sale->created_at))/$sale->duration) * 100 }}%">
                                 </div>
                             </div>
                             <small>

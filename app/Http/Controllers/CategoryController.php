@@ -34,7 +34,7 @@ class CategoryController extends Controller
         ]);
 
         Category::create($validated);
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success','Categoria agregada correctamente');
     }
 
     /**
@@ -64,7 +64,7 @@ class CategoryController extends Controller
             'name' => $request->name,
             'description' => $request->description,
         ]);
-        return to_route('categories.index', $category)->with('success','Usuario Actualizado');
+        return to_route('categories.index', $category)->with('success','Categoria actualizada');
     }
 
     /**
@@ -74,6 +74,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return to_route('categories.index')->with('success','Nota al basurero');
+        return to_route('categories.index')->with('success','Categoria eliminada');
     }
 }

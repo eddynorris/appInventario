@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\TryCatch;
 
 class BranchInventoryController extends Controller
 {
@@ -34,14 +35,19 @@ class BranchInventoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated= $request->validate([
-            'branch_id' => 'required',
-            'product_id'   => 'required',
-            'stock'   => 'required',
-        ]);
+        try {
+            $validated= $request->validate([
+                'branch_id' => 'required',
+                'product_id'   => 'required',
+                'stock'   => 'required',
+            ]);
+    
+            BranchInventory::create($validated);
+            return redirect()->route('inventories.index')->with('success','Inventario creado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->all())->with('error',  $e->getMessage());
+        }
 
-        BranchInventory::create($validated);
-        return redirect()->route('inventories.index');
     }
 
     /**
@@ -74,7 +80,7 @@ class BranchInventoryController extends Controller
             'product_id' => $request->product_id,
             'stock' => $request->stock,
         ]);
-        return to_route('inventories.index', $inventory)->with('success','Usuario Actualizado');
+        return to_route('inventories.index', $inventory)->with('success','Inventario Actualizado');
     }
 
     /**
@@ -85,6 +91,6 @@ class BranchInventoryController extends Controller
 
         $inventory->delete();
 
-        return to_route('inventories.index')->with('success','Nota al basurero');
+        return to_route('inventories.index')->with('success','Registro de inventario eliminado');
     }
 }

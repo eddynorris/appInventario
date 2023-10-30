@@ -300,6 +300,21 @@ return [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
         ],
+        [
+            'type'         => 'navbar-notification',
+            'icon'         => 'fas fa-bell',
+            'icon_color'   => 'warning',
+            'label'        => 0, 
+            'label_color'  => 'danger',
+            'topnav_right' => true,
+            'dropdown_flabel' => 'All notifications',
+            'dropdown_mode'   => true, 
+            /*'route'      => 'notifications.show',
+            'update_cfg' => [
+                'route'  => ['notifications.get', ['param' => 'val']],
+                'period' => 30,
+            ],*/
+        ],
 
         // Sidebar items:
         [
@@ -484,12 +499,17 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2/sweetalert2.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css',
                 ],
             ],
         ],

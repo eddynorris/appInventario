@@ -18,16 +18,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="document">DNI</label>
-                    <input type="text" class="form-control" id="document" name="document" value="{{ $sale->document }}" placeholder="Ingrese DNI">
-                </div>
-                <div class="form-group">
-                    <label for="client">Cliente</label>
-                    <input type="text" class="form-control" id="client" name="client" value="{{ $sale->client }}" placeholder="Nombre del cliente">
-                </div>
-                <div class="form-group">
-                    <label for="address">Direccion</label>
-                    <input type="text" class="form-control" id="address" name="address" value="{{ $sale->address }}" placeholder="Direccion del cliente">
+                    <label>Cliente</label>
+                    
+                    <select class="form-control" id="client_id" name="client_id"> 
+                        @foreach($clients as $client)
+                            <option value="{{ $client->id }}" {{ $client->id == $sale->client_id ? 'selected' : '' }}>
+                                Nombre: {{ $client->name }}   DNI: {{ $client->document }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="address">Duracion</label>
