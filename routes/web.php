@@ -38,6 +38,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/panel', [PanelController::class, 'index'])->name('panel.index');
+
+//Notificaciones
+Route::get('/verDetalle/{id}', [PanelController::class, 'verDetalle'])->name('verDetalle');
+
 //Reportes
 Route::get('/sales/dateReport', [SaleController::class, 'dateReport'])->name('sales.dateReport')->middleware(['auth','role:admin']);
 

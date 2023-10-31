@@ -300,22 +300,7 @@ return [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-        [
-            'type'         => 'navbar-notification',
-            'icon'         => 'fas fa-bell',
-            'icon_color'   => 'warning',
-            'label'        => 0, 
-            'label_color'  => 'danger',
-            'topnav_right' => true,
-            'dropdown_flabel' => 'All notifications',
-            'dropdown_mode'   => true, 
-            /*'route'      => 'notifications.show',
-            'update_cfg' => [
-                'route'  => ['notifications.get', ['param' => 'val']],
-                'period' => 30,
-            ],*/
-        ],
-
+        
         // Sidebar items:
         [
             'text'        => 'Dashboard',
@@ -353,17 +338,25 @@ return [
         ],
         [
             'text'        => 'Productos',
-            'route'         => 'products.index',
             'icon'        => 'fas fa-shopping-bag',
             'label_color' => 'success',
-            'can'  => 'manage-admin'
-        ],
-        [
-            'text'        => 'Categorias',
-            'route'         => 'categories.index',
-            'icon'        => 'far fa-copy',
-            'label_color' => 'success',
-            'can'  => 'manage-admin'
+            'submenu' => [
+                [
+                'text'      =>  'Categorias',
+                'route'     =>  'categories.index',
+                'can'       =>  'manage-admin'
+                ],
+                [
+                'text' => 'Lista de productos',
+                'route'  => 'products.index',
+                'can'  => 'manage-admin'
+                ],
+                [
+                'text' => 'Nuevo producto',
+                'route'  => 'products.create',
+                'can'  => 'manage-admin'
+                ],
+            ],
         ],
         [
             'text'        => 'Transferencias',
