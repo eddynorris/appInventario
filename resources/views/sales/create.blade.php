@@ -1,7 +1,5 @@
 
 <x-app-layout>
-
-
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">Agregar nueva venta</h3>

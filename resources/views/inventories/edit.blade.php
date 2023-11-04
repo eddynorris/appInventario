@@ -29,7 +29,7 @@
                         <input type="number" class="form-control" id="stock" name="stock" step="0.01" value="{{ $inventory->stock }}" min="0" > 
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary ">Registrar transferencia</button>
+                        <button type="submit" class="btn btn-primary ">Actualizar</button>
                     </div>
                 </div>
             </form>

@@ -10,15 +10,69 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
+    /*
     public function index()
     {
         $products = Product::with('category')->get();
         return view('products.index')->with('products', $products);
     }
 
-    /**
+    /*
      * Show the form for creating a new resource.
      */
+
+     public function index()
+     {
+         $products = Product::orderBy('created_at', 'desc')->get();
+     
+         // Map the products to the desired format.
+         $data = $products->map(function ($product) {
+ 
+             $showUrl = route("products.show", $product);
+             $editUrl = route("products.edit", $product);
+             $deleteUrl = route("products.destroy", $product->id);
+ 
+             $btnDetails = "<a href='{$showUrl}' class='btn btn-primary btn-sm mr-1'><i class='fas fa-eye'></i></a>";
+             $btnEdit = "<a href='{$editUrl}' class='btn btn-info btn-sm mr-1'><i class='fas fa-pencil-alt'></i></a>";
+             $btnDelete = "<form method='post' action='{$deleteUrl}' style='display: inline;'>
+                               " . csrf_field() . "
+                               " . method_field('DELETE') . "
+                               <button class='btn btn-danger btn-sm' onclick='return confirm(\"¿Está seguro?\")'>
+                                   <i class='fas fa-trash'></i>
+                               </button>
+                           </form>";
+             return [
+               $product->name,
+               $product->category->name,
+               $product->description,
+               $product->unit_measure,
+               $product->container,
+               $product->weight,
+               'S/.'.$product->price,
+               '<nobr>' . $btnDetails . $btnEdit . $btnDelete . '</nobr>',
+             ];
+         });
+         $heads = [
+             'Nombre',
+             'Categoria',
+             'Descripcion ',
+             'Unidad de medida',
+             'Contenedor ',
+             'Peso',
+             'Precio',
+             ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+         ];
+         // Create the configuration array for the frontend.
+         $config = [
+             'data' => $data,
+             'order' => [[1, 'asc']],
+             'columns' => [null, null, null, null, null, null, null, ['orderable' => false]],
+         ];
+     
+         // Send the configuration to the view.
+         return view('products.index', ['config' => $config, 'heads' => $heads]);
+     }
+
     public function create()
     {
         $categories = Category::select('id', 'name')->get();

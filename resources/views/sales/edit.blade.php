@@ -63,33 +63,47 @@
                         </div>
                     </div>
                 </div>
-                <div id="preloadedCartContainer">
-                    @foreach($saleDetails as $detail)
-                        <div class="card" data-product-id="{{ $detail->product_id }}">
-                            <div class="card-header">
-                                <h3 class="card-title">{{ $detail->product->name }}</h3> 
-                                <!-- Suponiendo que tienes una relación product en tu modelo SaleDetail -->
+                <div class="container-fluid">
+                    <div id="cartContainer" class="row">
+                        @foreach($saleDetails as $detail)
+                            <div class="card card-info col-md-4" 
+                                data-product-id="{{ $detail->product_id }}" data-unit-price="{{ $detail->price }}" 
+                                data-unit-weight="{{ $detail->product->weight }}" data-quantity="{{ $detail->quantity }}">
+
+                                <div class="card-header">
+                                    <h3 class="card-title">{{ $detail->product->name }}</h3>
+                                    <div class="card-tools">
+                                        <button type="button" onclick="removeProduct({{$detail->product_id}})" class="btn btn-danger">
+                                            <i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label >Cantidad</label>
+                                            <input type="hidden" name="products[{{ $detail->product_id }}][id]" value="{{ $detail->product_id }}">
+                                            <input type="text" name="products[{{ $detail->product_id }}][quantity]" value="{{ $detail->quantity }}" readonly class="form-control-plaintext">
+                                        </div>
+                                        <div class="col-4">    
+                                            <label >Precio</label>
+                                            <input type="text" name="products[{{ $detail->product_id }}][price]" value="{{ $detail->price }}" readonly class="form-control-plaintext">
+                                        </div>
+                                        <div class="col-4">
+                                            <label >Peso</label>
+                                            <input type="text" name="products[{{ $detail->product_id }}][weight]" value="{{ $detail->product->weight }}" readonly class="form-control-plaintext">
+                                        </div>
+                                        <div class="col-12"> 
+                                            <input type="text" readonly class="form-control-plaintext" placeholder="Precio Subtotal: S/.{{$detail->price * $detail->quantity}}">
+                                            <input type="text" readonly class="form-control-plaintext" placeholder="Peso Total: {{$detail->product->weight * $detail->quantity}}kg">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p><strong>Cantidad:</strong> {{ $detail->quantity }}</p>
-                                <p><strong>Precio Unitario:</strong> ${{ number_format($detail->price, 2) }}</p>
-                                <p><strong>Peso:</strong> {{ number_format($detail->product->weight, 2) }}kg</p>
-                                <p><strong>Precio Subtotal:</strong> ${{ number_format($detail->subtotal, 2) }}</p>
-                                <p><strong>Peso Total:</strong> {{ number_format($detail->product->weight * $detail->quantity, 2) }}kg</p>
-                            </div>
-                        </div>
-                        <!-- Campos ocultos para este producto -->
-                        <input type="hidden" name="products[{{ $detail->product_id }}][id]" value="{{ $detail->product_id }}">
-                        <input type="hidden" name="products[{{ $detail->product_id }}][quantity]" value="{{ $detail->quantity }}">
-                        <input type="hidden" name="products[{{ $detail->product_id }}][price]" value="{{ $detail->price }}">
-                        <input type="hidden" name="products[{{ $detail->product_id }}][weight]" value="{{ $detail->product->weight }}">
-                    @endforeach
+                        @endforeach   
+                    </div>
                 </div>
                 <div id="cartContainer">
                     <!-- Aquí se irán añadiendo las Cards de los productos -->
-                </div>
-                <div id="hiddenFields">
-                    <!-- Aquí se irán añadiendo los campos ocultos por cada producto añadido -->
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -98,24 +112,28 @@
         </form>
     </div>
     <script>
-        let totalAmount = 0;
-        let totalWeight = 0;
+
+        let totalAmount = parseFloat('{{ $sale->total_amount }}');
+        let totalWeight = parseFloat('{{ $sale->total_weight }}');;
 
         const productSelect = document.getElementById('product_id');
         const quantityInput = document.getElementById('quantity');
         const cartContainer = document.getElementById('cartContainer');
-        const hiddenFieldsContainer = document.getElementById('hiddenFields');
+
+        function validateForm() {
+            const productsAdded = cartContainer.children.length;
+
+            if (productsAdded === 0) {
+                alert('Por favor, añade al menos un producto antes de registrar.');
+                return false;
+            }
+        
+            return true;
+        }
+
         
         function findCardByProductId(productId) {
             return cartContainer.querySelector(`.card[data-product-id="${productId}"]`);
-        }
-
-        function createHiddenInput(name, value) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = value;
-            return input;
         }
 
         function addToCart() {
@@ -126,57 +144,87 @@
             const productName = selectedProduct.text;
             const unitPrice = parseFloat(selectedProduct.getAttribute('data-price'));
             const unitWeight = parseFloat(selectedProduct.getAttribute('data-weight'));
-            const quantity = parseFloat(quantityInput.value);
-            totalAmount += unitPrice * quantity;
-            totalWeight += unitWeight * quantity;
+            const unitContainer = selectedProduct.getAttribute('data-container');
+            const unitUnit = selectedProduct.getAttribute('data-unit');
             
+            const quantity = parseFloat(quantityInput.value);
+
             let card = findCardByProductId(productId);
 
             if (!card) {
                 card = document.createElement('div');
                 card.classList.add('card');
+                card.classList.add('card-info');
+                card.classList.add('col-md-4');
+
                 card.setAttribute('data-product-id', productId);
-                
+                card.setAttribute('data-unit-price', unitPrice);
+                card.setAttribute('data-unit-weight', unitWeight);
+                card.setAttribute('data-quantity', quantity);
+
+                totalAmount += unitPrice * quantity;
+                totalWeight += unitWeight * quantity;
+            
                 document.getElementById('total_amount').value = totalAmount.toFixed(2);
                 document.getElementById('total_weight').value = totalWeight.toFixed(2);
 
                 cartContainer.append(card);
+
+                card.innerHTML = `
+
+                        <div class="card-header">
+                            <h3 class="card-title">${productName}</h3>
+                            <div class="card-tools">
+                                <button type="button" onclick="removeProduct(${productId})" class="btn btn-danger">
+                                    <i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label >Cantidad</label>
+                                    <input type="hidden" name="products[${productId}][id]" value="${productId}">
+                                    <input type="text" name="products[${productId}][quantity]" value="${quantity}" readonly class="form-control-plaintext">
+                                </div>
+                                <div class="col-4">    
+                                    <label >Precio</label>
+                                    <input type="text" name="products[${productId}][price]" value="${unitPrice}" readonly class="form-control-plaintext">
+                                </div>
+                                <div class="col-4">
+                                    <label >Peso</label>
+                                    <input type="text" name="products[${productId}][weight]" value="${unitWeight}" readonly class="form-control-plaintext">
+                                </div>
+                                <div class="col-12"> 
+                                    <input type="text" readonly class="form-control-plaintext" placeholder="Precio Subtotal: $${(unitPrice * quantity).toFixed(2)}">
+                                    <input type="text" readonly class="form-control-plaintext" placeholder="Peso Total: ${(unitWeight * quantity).toFixed(2)}kg">
+                                </div>
+                            </div>
+                        </div>
+
+            `;
+
             }
             else {
                 alert('El producto ya ha sido añadido al carrito.');
             }
 
-            card.innerHTML = `
-                <div class="card-header">
-                    <h3 class="card-title">${productName}</h3>
-                    <button onclick="removeProduct(${productId})" style="cursor:pointer; background-color: red; color: white; border: none; float: right;">X</button>
-                </div>
-                <div class="card-body">
-                    <p><strong>Cantidad:</strong> ${quantity}</p>
-                    <p><strong>Precio Unitario:</strong> $${unitPrice.toFixed(2)}</p>
-                    <p><strong>Peso:</strong> ${unitWeight.toFixed(2)}kg</p>
-                    <p><strong>Precio Subtotal:</strong> $${(unitPrice * quantity).toFixed(2)}</p>
-                    <p><strong>Peso Total:</strong> ${(unitWeight * quantity).toFixed(2)}kg</p>
-                </div>
-            `;
-
-            // Añadir campos ocultos
-            hiddenFieldsContainer.append(
-                createHiddenInput(`products[${productId}][id]`, productId),
-                createHiddenInput(`products[${productId}][quantity]`, quantity),
-                createHiddenInput(`products[${productId}][price]`, unitPrice),
-                createHiddenInput(`products[${productId}][weight]`, unitWeight)
-            );
-        }
-        function findCardByProductId(productId) {
-            return cartContainer.querySelector(`.card[data-product-id="${productId}"]`) || 
-                   document.getElementById('preloadedCartContainer').querySelector(`.card[data-product-id="${productId}"]`);
         }
         function removeProduct(productId) {
-            const card = findCardByProductId(productId);      
-                card.remove();
-        }
+            const card = findCardByProductId(productId);
+            
+            if (card) {
+                const unitPrice = parseFloat(card.getAttribute('data-unit-price'));  
+                const unitWeight = parseFloat(card.getAttribute('data-unit-weight'));
+                const quantity = parseFloat(card.getAttribute('data-quantity'));
 
+                totalAmount -= unitPrice * quantity;
+                totalWeight -= unitWeight * quantity;
+
+                document.getElementById('total_weight').value = totalWeight.toFixed(2);
+                document.getElementById('total_amount').value = totalAmount.toFixed(2);
+                card.remove();
+            }
+        }
     </script>
 </x-app-layout>
 

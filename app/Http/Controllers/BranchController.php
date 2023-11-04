@@ -9,15 +9,70 @@ use Illuminate\Support\Facades\Auth;
 
 class BranchController extends Controller
 {
+     /*
     public function index()
     {
         $branches = Branch::all();
         return view('branches.index')->with('branches', $branches);
     }
 
-    /**
-     * Show the form for creating a new resource.
      */
+
+     public function index()
+     {
+         $branches = Branch::orderBy('created_at', 'desc')->get();
+     
+         $data = $branches->map(function ($branch) {
+ 
+             $showUrl = route("branches.show", $branch);
+             $editUrl = route("branches.edit", $branch);
+             $deleteUrl = route("branches.destroy", $branch->id);
+ 
+             $btnDetails = "<a href='{$showUrl}' class='btn btn-primary btn-sm mr-1'><i class='fas fa-eye'></i></a>";
+             $btnEdit = "<a href='{$editUrl}' class='btn btn-info btn-sm mr-1'><i class='fas fa-pencil-alt'></i></a>";
+             $btnDelete = "<form method='post' action='{$deleteUrl}' style='display: inline;'>
+                               " . csrf_field() . "
+                               " . method_field('DELETE') . "
+                               <button class='btn btn-danger btn-sm' onclick='return confirm(\"¿Está seguro?\")'>
+                                   <i class='fas fa-trash'></i>
+                               </button>
+                           </form>";
+
+             return [
+               $branch->name,
+               $branch->ruc,
+               $branch->country,
+               $branch->department,
+               $branch->province,
+               $branch->district,
+               $branch->address,
+               $branch->type,
+               '<nobr>' . $btnDetails . $btnEdit . $btnDelete . '</nobr>',
+             ];
+         });
+ 
+         $heads = [
+             'Nombre',
+             'RUC',
+             'Pais ',
+             'Departamento',
+             'Provincia',
+             'Distrito',
+             'Direccion',
+             'Tipo',
+             ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+         ];
+         // Create the configuration array for the frontend.
+         $config = [
+             'data' => $data,
+             'order' => [[1, 'asc']],
+             'columns' => [null, null, null, null, null, null, null, null, ['orderable' => false]],
+         ];
+     
+         // Send the configuration to the view.
+         return view('branches.index', ['config' => $config, 'heads' => $heads]);
+     }
+
     public function create()
     {
         return view('branches.create');

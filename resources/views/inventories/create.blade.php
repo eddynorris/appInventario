@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Agregar nuevo producto</h3>
+            <h3 class="card-title">Agregar nuevo inventario</h3>
         </div>
             <form method="POST" action="{{ route('inventories.store') }}">
                 @csrf
